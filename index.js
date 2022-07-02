@@ -14,21 +14,24 @@ client.on('ready', () => {
     console.log('The bot is ready')
 })
 
+// break into two methods
+function replyWithFact(message) {
+    request.get({
+        url: `https://api.api-ninjas.com/v1/facts?limit=1`,
+        headers: {
+            "X-Api-Key": process.env.API_KEY
+        }
+    }, (error, response, body) => {
+        const profile = JSON.parse(body)
+        message.reply({
+            content: profile[0].fact
+        })
+    })
+}
+
 client.on('messageCreate', (message) => {
     if (message.content === '!fact') {
-
-        var profile
-        request.get({
-            url: `https://api.api-ninjas.com/v1/facts?limit=1`,
-            headers: {
-                "X-Api-Key": process.env.API_KEY
-            }
-        }, (error, response, body) => {
-            profile = JSON.parse(body)
-            message.reply({
-                content: profile[0].fact
-            })
-        })
+        replyWithFact(message)
     }
 })
 
